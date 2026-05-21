@@ -1,0 +1,6 @@
+{
+  "name": "SISCHAM",
+  "description": "Sistema Inteligente de Chamada de Senhas com Áudio e Exibição Remota.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
