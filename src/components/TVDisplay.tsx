@@ -550,6 +550,7 @@ export default function TVDisplay() {
 
   return (
     <div className="fixed inset-0 bg-slate-100 text-slate-900 overflow-hidden flex flex-col p-6 gap-6">
+
       {/* HEADER */}
       <div className="bg-indigo-700 text-white p-6 rounded-3xl flex items-center justify-between">
         <div className="flex items-center gap-4">
@@ -574,6 +575,7 @@ export default function TVDisplay() {
 
       {/* CONTEÚDO */}
       <div className="flex-1 flex gap-6 overflow-hidden relative">
+
         {/* STANDBY */}
         <AnimatePresence>
           {isWaitingMode && (
@@ -589,6 +591,7 @@ export default function TVDisplay() {
               }}
               className="absolute inset-0 z-50 bg-black rounded-[3rem] overflow-hidden"
             >
+
               {/* YOUTUBE */}
               {standbyMode ===
               'youtube' ? (
@@ -675,6 +678,7 @@ export default function TVDisplay() {
         {/* PRINCIPAL */}
         <div className="flex-[3] bg-white rounded-[3rem] shadow-2xl flex flex-col overflow-hidden">
           <div className="flex-1 flex flex-col items-center justify-center p-12">
+
             <AnimatePresence mode="wait">
               {currentCall ? (
                 <motion.div
@@ -706,8 +710,7 @@ export default function TVDisplay() {
                   </div>
 
                   <div className="bg-indigo-950 text-white text-7xl font-black px-20 py-8 rounded-[2rem] mt-8">
-                    SALA{' '}
-                    {
+                    SALA {
                       currentCall.counter
                     }
                   </div>
@@ -733,48 +736,72 @@ export default function TVDisplay() {
                 </div>
               )}
             </AnimatePresence>
+
           </div>
         </div>
 
         {/* LATERAL */}
         <div className="flex-1 flex flex-col gap-6">
+
           {/* MÉDICOS */}
-          <div className="flex-1 bg-white rounded-[3rem] p-6 overflow-y-auto">
-            <h3 className="font-black uppercase mb-4">
+          <div className="flex-1 bg-white rounded-[3rem] p-6 overflow-y-auto shadow-xl border border-slate-200">
+
+            <h3 className="font-black uppercase mb-4 text-slate-700">
               Médicos & Salas
             </h3>
 
             <div className="space-y-3">
-              {availability.map(
-                (item) => (
-                  <div
-                    key={
-                      item.id
+              {availability.map((item) => (
+                <div
+                  key={item.id}
+                  className={`p-4 rounded-2xl border flex justify-between items-center transition-all duration-300
+                    ${
+                      item.status === 'available'
+                        ? 'bg-emerald-500/10 border-emerald-400'
+                        : item.status === 'busy'
+                        ? 'bg-red-500/10 border-red-400'
+                        : item.status === 'away'
+                        ? 'bg-yellow-500/10 border-yellow-400'
+                        : 'bg-transparent border-slate-200'
                     }
-                    className="p-3 rounded-2xl border flex justify-between"
-                  >
-                    <div>
-                      <p className="font-bold">
-                        {
-                          item.room
-                        }
-                      </p>
+                  `}
+                >
 
-                      <p className="text-xs text-slate-500">
-                        {
-                          item.doctor
-                        }
-                      </p>
-                    </div>
+                  {/* INFO */}
+                  <div className="flex flex-col">
+                    <p className="font-extrabold text-slate-800 text-sm">
+                      {item.room}
+                    </p>
 
-                    <span className="text-xs font-black">
-                      {
-                        item.status
-                      }
-                    </span>
+                    <p className="text-xs text-slate-500">
+                      {item.doctor}
+                    </p>
                   </div>
-                )
-              )}
+
+                  {/* STATUS */}
+                  <span
+                    className={`text-[10px] font-black uppercase px-3 py-2 rounded-xl tracking-wide
+                      ${
+                        item.status === 'available'
+                          ? 'bg-emerald-500 text-white'
+                          : item.status === 'busy'
+                          ? 'bg-red-500 text-white'
+                          : item.status === 'away'
+                          ? 'bg-yellow-500 text-white'
+                          : 'bg-transparent border border-slate-300 text-slate-500'
+                      }
+                    `}
+                  >
+                    {item.status === 'available'
+                      ? 'Livre'
+                      : item.status === 'busy'
+                      ? 'Atendendo'
+                      : item.status === 'away'
+                      ? 'Ausente'
+                      : 'Indefinido'}
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
 
@@ -821,6 +848,7 @@ export default function TVDisplay() {
               )}
             </div>
           </div>
+
         </div>
       </div>
     </div>
