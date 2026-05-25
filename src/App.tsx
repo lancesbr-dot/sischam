@@ -1,24 +1,40 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+<<<<<<< HEAD
 import { Monitor, Settings as SettingsIcon, LayoutPanelLeft, Bell, Stethoscope } from 'lucide-react';
 import ControlPanel from './components/ControlPanel';
 import TVDisplay from './components/TVDisplay';
 import Settings from './components/Settings';
 import DoctorPanel from './components/DoctorPanel';
+=======
+import { Monitor, Settings as SettingsIcon, LayoutPanelLeft, Bell } from 'lucide-react';
+import ControlPanel from './components/ControlPanel';
+import TVDisplay from './components/TVDisplay';
+import Settings from './components/Settings';
+>>>>>>> 1f09d5c17630359af06e0cd4d7ca9690ead04c02
 import { io } from 'socket.io-client';
 
 // Initialize socket globally or in a context
 export const socket = io();
 
 function AppContent() {
+<<<<<<< HEAD
   const isPlainPath = window.location.pathname === '/display' || window.location.pathname === '/doctor';
 
   if (isPlainPath) {
+=======
+  const isDisplay = window.location.pathname === '/display';
+
+  if (isDisplay) {
+>>>>>>> 1f09d5c17630359af06e0cd4d7ca9690ead04c02
     return (
       <Routes>
         <Route path="/" element={<ControlPanel />} />
         <Route path="/display" element={<TVDisplay />} />
+<<<<<<< HEAD
         <Route path="/doctor" element={<DoctorPanel />} />
+=======
+>>>>>>> 1f09d5c17630359af06e0cd4d7ca9690ead04c02
         <Route path="/settings" element={<Settings />} />
       </Routes>
     );
@@ -43,6 +59,7 @@ function AppContent() {
               <LayoutPanelLeft className="w-4 h-4" />
               Controle
             </Link>
+<<<<<<< HEAD
             <Link to="/doctor" target="_blank" className="flex items-center gap-2 text-xs font-black uppercase tracking-widest hover:text-indigo-200 transition-colors">
               <Stethoscope className="w-4 h-4" />
               Painel Médico
@@ -53,6 +70,14 @@ function AppContent() {
             </Link>
             <Link to="/settings" className="flex items-center gap-2 text-xs font-black uppercase tracking-widest hover:text-indigo-200 transition-colors">
               <SettingsIcon className="w-4 h-4 text-indigo-300" />
+=======
+            <Link to="/display" target="_blank" className="flex items-center gap-2 text-xs font-black uppercase tracking-widest hover:text-indigo-200 transition-colors">
+              <Monitor className="w-4 h-4" />
+              Painel TV
+            </Link>
+            <Link to="/settings" className="flex items-center gap-2 text-xs font-black uppercase tracking-widest hover:text-indigo-200 transition-colors">
+              <SettingsIcon className="w-4 h-4" />
+>>>>>>> 1f09d5c17630359af06e0cd4d7ca9690ead04c02
               Configurações
             </Link>
           </nav>
@@ -66,7 +91,10 @@ function AppContent() {
         <Routes>
           <Route path="/" element={<ControlPanel />} />
           <Route path="/display" element={<TVDisplay />} />
+<<<<<<< HEAD
           <Route path="/doctor" element={<DoctorPanel />} />
+=======
+>>>>>>> 1f09d5c17630359af06e0cd4d7ca9690ead04c02
           <Route path="/settings" element={<Settings />} />
         </Routes>
       </main>

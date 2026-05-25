@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { socket } from '../App';
+<<<<<<< HEAD
 import { 
   RotateCcw, 
   History as HistoryIcon, 
@@ -17,6 +18,9 @@ import {
   ChevronRight,
   ShieldAlert
 } from 'lucide-react';
+=======
+import { Play, RotateCcw, History as HistoryIcon, UserPlus, Volume2, Trash2 } from 'lucide-react';
+>>>>>>> 1f09d5c17630359af06e0cd4d7ca9690ead04c02
 import { motion, AnimatePresence } from 'motion/react';
 
 export default function ControlPanel() {
@@ -25,6 +29,7 @@ export default function ControlPanel() {
   const [history, setHistory] = useState<any[]>([]);
   const [lastCalled, setLastCalled] = useState<any>(null);
 
+<<<<<<< HEAD
   // Availability state
   const [availability, setAvailability] = useState<any[]>([]);
   const [isEditingRoom, setIsEditingRoom] = useState<any>(null); // { id, room, doctor, status }
@@ -41,6 +46,9 @@ export default function ControlPanel() {
 
   useEffect(() => {
     // Initial fetch
+=======
+  useEffect(() => {
+>>>>>>> 1f09d5c17630359af06e0cd4d7ca9690ead04c02
     fetch('/api/history')
       .then(res => res.json())
       .then(data => {
@@ -48,9 +56,12 @@ export default function ControlPanel() {
         if (data.length > 0) setLastCalled(data[0]);
       });
 
+<<<<<<< HEAD
     fetchAvailability();
 
     // Sockets sync
+=======
+>>>>>>> 1f09d5c17630359af06e0cd4d7ca9690ead04c02
     socket.on('new-call', (data) => {
       setHistory(prev => [data, ...prev].slice(0, 10));
       setLastCalled(data);
@@ -61,6 +72,7 @@ export default function ControlPanel() {
       setLastCalled(null);
     });
 
+<<<<<<< HEAD
     socket.on('availability-updated', () => {
       fetchAvailability();
     });
@@ -69,6 +81,11 @@ export default function ControlPanel() {
       socket.off('new-call');
       socket.off('history-cleared');
       socket.off('availability-updated');
+=======
+    return () => {
+      socket.off('new-call');
+      socket.off('history-cleared');
+>>>>>>> 1f09d5c17630359af06e0cd4d7ca9690ead04c02
     };
   }, []);
 
@@ -104,6 +121,7 @@ export default function ControlPanel() {
     setPassword('001');
   };
 
+<<<<<<< HEAD
   // Availability actions
   const handleUpdateStatus = async (id: number, status: string) => {
     try {
@@ -187,6 +205,10 @@ export default function ControlPanel() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       {/* Left Column - Calling and History */}
+=======
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+>>>>>>> 1f09d5c17630359af06e0cd4d7ca9690ead04c02
       <div className="lg:col-span-2 space-y-6">
         <section className="bg-white p-10 rounded-[2rem] shadow-xl border-4 border-indigo-100 relative overflow-hidden">
           <div className="absolute top-0 right-0 p-4">
@@ -196,12 +218,17 @@ export default function ControlPanel() {
             </span>
           </div>
           
+<<<<<<< HEAD
           <h2 className="text-2xl font-black mb-6 flex items-center gap-3 text-slate-800">
+=======
+          <h2 className="text-2xl font-black mb-8 flex items-center gap-3 text-slate-800">
+>>>>>>> 1f09d5c17630359af06e0cd4d7ca9690ead04c02
             <span className="bg-indigo-700 p-2 rounded-lg text-white">
               <UserPlus size={24} />
             </span>
             Painel do Operador
           </h2>
+<<<<<<< HEAD
 
           {/* Real-time Toast Notifications */}
           <AnimatePresence>
@@ -227,6 +254,8 @@ export default function ControlPanel() {
               </motion.div>
             )}
           </AnimatePresence>
+=======
+>>>>>>> 1f09d5c17630359af06e0cd4d7ca9690ead04c02
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
             <div className="space-y-3">
@@ -250,6 +279,7 @@ export default function ControlPanel() {
             </div>
           </div>
 
+<<<<<<< HEAD
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <button 
               onClick={handleCall}
@@ -293,6 +323,37 @@ export default function ControlPanel() {
         </section>
 
         {/* Call History */}
+=======
+          <div className="flex flex-col md:flex-row gap-4">
+            <button 
+              onClick={handleCall}
+              className="flex-[2] bg-orange-500 hover:bg-orange-600 text-white h-24 rounded-3xl flex flex-col items-center justify-center gap-1 shadow-lg shadow-orange-200 transition-all active:scale-95 group"
+            >
+              <span className="text-3xl font-black tracking-tighter group-hover:scale-110 transition-transform">PRÓXIMO</span>
+              <span className="text-[10px] font-bold opacity-80 uppercase tracking-widest">Chamar Nova Senha</span>
+            </button>
+            
+            <button 
+              onClick={() => handleRepeat()}
+              disabled={!lastCalled}
+              className="flex-1 bg-indigo-700 hover:bg-indigo-800 text-white font-black rounded-3xl shadow-lg transition-all active:scale-95 flex flex-col items-center justify-center gap-1 disabled:opacity-50 disabled:grayscale"
+            >
+               <span className="text-xl font-black uppercase tracking-tight">Repetir</span>
+               <span className="text-[10px] font-bold opacity-80 uppercase tracking-widest">Última Chamada</span>
+            </button>
+
+            <button 
+              onClick={handleReset}
+              className="flex-1 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 font-black rounded-3xl border-2 border-indigo-200 transition-all flex items-center justify-center gap-2 text-xs uppercase tracking-widest"
+              title="Resetar sequência"
+            >
+              <RotateCcw size={18} />
+              Resetar
+            </button>
+          </div>
+        </section>
+
+>>>>>>> 1f09d5c17630359af06e0cd4d7ca9690ead04c02
         <section className="bg-white p-10 rounded-[2rem] shadow-xl border-4 border-slate-50">
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-xl font-black flex items-center gap-2 text-slate-800 uppercase tracking-tight">
@@ -301,7 +362,11 @@ export default function ControlPanel() {
             </h2>
             <button 
               onClick={handleClearHistory}
+<<<<<<< HEAD
               className="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-red-600 hover:text-white transition-all active:scale-95 shadow-sm cursor-pointer"
+=======
+              className="flex items-center gap-2 px-4 py-2 bg-red-50 text-red-600 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-red-600 hover:text-white transition-all active:scale-95 shadow-sm"
+>>>>>>> 1f09d5c17630359af06e0cd4d7ca9690ead04c02
             >
               <Trash2 size={14} />
               Limpar Histórico
@@ -338,11 +403,16 @@ export default function ControlPanel() {
                       </td>
                       <td className="px-8 py-6 text-right">
                         <button 
+<<<<<<< HEAD
                           onClick={(e) => {
                             e.stopPropagation();
                             handleRepeat(call);
                           }}
                           className="p-2 bg-indigo-50 hover:bg-indigo-600 hover:text-white text-indigo-600 rounded-lg transition-all active:scale-95 cursor-pointer"
+=======
+                          onClick={() => handleRepeat(call)}
+                          className="p-2 bg-indigo-50 hover:bg-indigo-600 hover:text-white text-indigo-600 rounded-lg transition-all active:scale-95"
+>>>>>>> 1f09d5c17630359af06e0cd4d7ca9690ead04c02
                           title="Repetir Chamada"
                         >
                           <Volume2 size={20} />
@@ -357,6 +427,7 @@ export default function ControlPanel() {
         </section>
       </div>
 
+<<<<<<< HEAD
       {/* Right Column - Status and Room Availability Tracking */}
       <div className="space-y-6">
         {/* Availability Tracking Module */}
@@ -584,6 +655,46 @@ export default function ControlPanel() {
             Clique em <b>"DESTINAR SALA"</b> para que o sistema direcione o paciente para o primeiro médico marcado como <b>LIVRE</b> (🟢). O status deste médico mudará para ocupado logo em seguida, garantindo as chamadas de forma rotativa e automática!
           </p>
         </div>
+=======
+      <div className="space-y-6">
+        <div className="bg-indigo-900 p-8 rounded-[2rem] text-white shadow-2xl relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-800 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-700 opacity-50"></div>
+          <h3 className="text-lg font-black mb-3 relative z-10 uppercase tracking-tight">Dica SISCHAM</h3>
+          <p className="text-indigo-200 leading-relaxed text-sm relative z-10 opacity-90">
+            A Transmissão para o Painel TV está <b>Ativa</b>. Todas as chamadas realizadas aqui serão reproduzidas instantaneamente na tela remota com sinal sonoro e voz.
+          </p>
+        </div>
+        
+        <div className="bg-white p-8 rounded-[2rem] shadow-lg border border-slate-200">
+          <h3 className="font-black text-slate-800 uppercase text-xs tracking-[0.2em] mb-6">Status da Fila</h3>
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
+                <span className="text-slate-400">Fluxo de Atendimento</span>
+                <span className="text-indigo-600">{history.length} Chamadas</span>
+              </div>
+              <div className="w-full bg-slate-100 h-3 rounded-full overflow-hidden p-1 shadow-inner">
+                <motion.div 
+                  initial={{ width: 0 }}
+                  animate={{ width: '65%' }}
+                  className="bg-indigo-500 h-full rounded-full shadow-[0_0_8px_rgba(99,102,241,0.5)]"
+                ></motion.div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+               <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 text-center">
+                  <div className="text-[10px] font-bold text-slate-400 uppercase mb-1">Total Hoje</div>
+                  <div className="text-2xl font-black text-slate-800">{history.length}</div>
+               </div>
+               <div className="bg-orange-50 p-4 rounded-xl border border-orange-100 text-center">
+                  <div className="text-[10px] font-bold text-orange-400 uppercase mb-1">Média (min)</div>
+                  <div className="text-2xl font-black text-orange-600">4.2</div>
+               </div>
+            </div>
+          </div>
+        </div>
+>>>>>>> 1f09d5c17630359af06e0cd4d7ca9690ead04c02
       </div>
     </div>
   );

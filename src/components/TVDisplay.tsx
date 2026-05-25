@@ -19,13 +19,17 @@ export default function TVDisplay() {
   const timerRef = useRef<any>(null);
   const mediaTimerRef = useRef<any>(null);
 
+<<<<<<< HEAD
   // Real-time Availability State
   const [availability, setAvailability] = useState<any[]>([]);
 
+=======
+>>>>>>> 1f09d5c17630359af06e0cd4d7ca9690ead04c02
   useEffect(() => {
     standbyTimeRef.current = standbyTime;
   }, [standbyTime]);
 
+<<<<<<< HEAD
   const fetchAvailability = useCallback(async () => {
     try {
       const res = await fetch('/api/availability');
@@ -36,6 +40,8 @@ export default function TVDisplay() {
     }
   }, []);
 
+=======
+>>>>>>> 1f09d5c17630359af06e0cd4d7ca9690ead04c02
   const fetchSettings = useCallback(async () => {
     try {
       const res = await fetch('/api/settings');
@@ -48,7 +54,16 @@ export default function TVDisplay() {
     }
   }, []);
 
+<<<<<<< HEAD
   const fetchMedia = useCallback(async () => {
+=======
+  useEffect(() => {
+    fetchSettings();
+    fetchMedia();
+  }, [fetchSettings]);
+
+  const fetchMedia = async () => {
+>>>>>>> 1f09d5c17630359af06e0cd4d7ca9690ead04c02
     try {
       const res = await fetch('/api/media');
       const data = await res.json();
@@ -56,6 +71,7 @@ export default function TVDisplay() {
     } catch (error) {
       console.error('Error fetching media:', error);
     }
+<<<<<<< HEAD
   }, []);
 
   useEffect(() => {
@@ -63,6 +79,9 @@ export default function TVDisplay() {
     fetchMedia();
     fetchAvailability();
   }, [fetchSettings, fetchMedia, fetchAvailability]);
+=======
+  };
+>>>>>>> 1f09d5c17630359af06e0cd4d7ca9690ead04c02
 
   const nextMedia = useCallback(() => {
     if (mediaList.length === 0) return;
@@ -165,10 +184,13 @@ export default function TVDisplay() {
 
     socket.on('settings-updated', handleSettingsUpdated);
 
+<<<<<<< HEAD
     socket.on('availability-updated', () => {
       fetchAvailability();
     });
 
+=======
+>>>>>>> 1f09d5c17630359af06e0cd4d7ca9690ead04c02
     socket.on('history-cleared', () => {
       setHistory([]);
       setCurrentCall(null);
@@ -194,10 +216,16 @@ export default function TVDisplay() {
       socket.off('new-call', handleNewCall);
       socket.off('repeat-call', handleRepeatCall);
       socket.off('settings-updated', handleSettingsUpdated);
+<<<<<<< HEAD
       socket.off('availability-updated');
       socket.off('history-cleared');
     };
   }, [speak, startInactivityTimer, fetchSettings, fetchAvailability]);
+=======
+      socket.off('history-cleared');
+    };
+  }, [speak, startInactivityTimer, fetchSettings]);
+>>>>>>> 1f09d5c17630359af06e0cd4d7ca9690ead04c02
 
   const handleUnlockAudio = () => {
     setAudioUnlocked(true);
@@ -420,6 +448,7 @@ export default function TVDisplay() {
           </div>
         </div>
 
+<<<<<<< HEAD
         {/* Right Sidebar - Doctors & History */}
         <div className="flex-1 flex flex-col gap-6 overflow-hidden">
           {/* Top Half - Rooms & Doctors availability */}
@@ -502,6 +531,61 @@ export default function TVDisplay() {
                 </div>
               )}
             </div>
+=======
+        {/* Right Sidebar - History */}
+        <div className="flex-1 bg-slate-50 rounded-[3rem] p-8 flex flex-col shadow-xl border border-slate-200">
+          <h3 className="text-slate-400 font-black uppercase text-xs tracking-[0.3em] mb-8 pb-4 border-b-2 border-slate-200 flex items-center justify-between">
+             Últimas Chamadas
+             <div className="bg-slate-200 px-2 py-1 rounded text-[8px]">HISTÓRICO</div>
+          </h3>
+          
+          <div className="flex-1 space-y-6 overflow-hidden">
+            <AnimatePresence initial={false}>
+              {history.map((call) => (
+                <motion.div
+                  key={call.id}
+                  initial={{ x: 50, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  className="bg-white p-6 rounded-3xl border shadow-sm flex justify-between items-center group hover:bg-indigo-50 transition-all duration-300 border-slate-100"
+                >
+                  <div className="flex flex-col">
+                    <span className="text-indigo-900/60 font-black text-[10px] uppercase tracking-widest mb-1">Senha</span>
+                    <span className="text-5xl font-black tracking-tighter text-indigo-900">{call.number}</span>
+                  </div>
+                  
+                  <button 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setCurrentCall(call);
+                      speak(call.number, call.counter);
+                    }}
+                    className="p-3 bg-indigo-50 text-indigo-600 rounded-2xl transition-all hover:bg-indigo-600 hover:text-white group-hover:scale-110 active:scale-95"
+                    title="Repetir Chamada"
+                  >
+                    <Volume2 size={24} />
+                  </button>
+
+                  <div className="text-right">
+                    <span className="text-slate-400 font-black text-[10px] uppercase tracking-widest mb-1">Sala</span>
+                    <div className="bg-slate-900 text-white px-3 py-1 rounded-xl text-2xl font-black tracking-tighter">{call.counter}</div>
+                  </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+            
+            {history.length === 0 && (
+              <div className="h-full flex flex-col items-center justify-center text-slate-300 gap-4">
+                <Bell size={64} className="opacity-20" />
+                <span className="font-black uppercase tracking-widest text-sm opacity-40">Aguardando...</span>
+              </div>
+            )}
+          </div>
+
+          <div className="mt-8 pt-6 border-t-2 border-slate-200">
+             <div className="text-slate-400 text-[10px] font-black tracking-[0.2em] uppercase text-center">
+               Unidade Centro • Sala Digital
+             </div>
+>>>>>>> 1f09d5c17630359af06e0cd4d7ca9690ead04c02
           </div>
         </div>
       </div>
