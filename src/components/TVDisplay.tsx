@@ -1,6 +1,17 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useRef
+} from 'react';
+
 import { socket } from '../App';
-import { motion, AnimatePresence } from 'motion/react';
+
+import {
+  motion,
+  AnimatePresence
+} from 'motion/react';
+
 import {
   BellRing,
   Volume2,
@@ -10,14 +21,23 @@ import {
 } from 'lucide-react';
 
 export default function TVDisplay() {
-  const [currentCall, setCurrentCall] = useState<any>(null);
-  const [history, setHistory] = useState<any[]>([]);
-  const [isSpeaking, setIsSpeaking] = useState(false);
-  const [audioUnlocked, setAudioUnlocked] = useState(false);
+  const [currentCall, setCurrentCall] =
+    useState<any>(null);
 
-  const [standbyMode, setStandbyMode] = useState<
-    'youtube' | 'local' | 'static'
-  >('youtube');
+  const [history, setHistory] =
+    useState<any[]>([]);
+
+  const [isSpeaking, setIsSpeaking] =
+    useState(false);
+
+  const [audioUnlocked, setAudioUnlocked] =
+    useState(false);
+
+  // STANDBY
+  const [standbyMode, setStandbyMode] =
+    useState<
+      'youtube' | 'local' | 'static'
+    >('local');
 
   const [youtubeId, setYoutubeId] =
     useState('5QNMCtuNqyI');
@@ -32,97 +52,103 @@ export default function TVDisplay() {
     useState<any[]>([]);
 
   const [isWaitingMode, setIsWaitingMode] =
-    useState(false);
+    useState(true);
 
   const [currentMediaIndex, setCurrentMediaIndex] =
     useState(0);
 
+  // VOZ
   const voicesRef =
     useRef<SpeechSynthesisVoice[]>([]);
 
+  // TIMERS
   const timerRef = useRef<any>(null);
-  const mediaTimerRef = useRef<any>(null);
 
-  // Salas / médicos
+  const mediaTimerRef =
+    useRef<any>(null);
+
+  // MÉDICOS
   const [availability, setAvailability] =
     useState<any[]>([]);
 
+  // =========================================
+  // CONFIG
+  // =========================================
+
   useEffect(() => {
-    standbyTimeRef.current = standbyTime;
+    standbyTimeRef.current =
+      standbyTime;
   }, [standbyTime]);
 
-  // Buscar disponibilidade
-  const fetchAvailability = useCallback(
-    async () => {
+  // =========================================
+  // API
+  // =========================================
+
+  const fetchAvailability =
+    useCallback(async () => {
       try {
         const res = await fetch(
           '/api/availability'
         );
 
-        const data = await res.json();
+        const data =
+          await res.json();
 
         setAvailability(data || []);
       } catch (error) {
-        console.error(
-          'Error fetching availability:',
-          error
-        );
+        console.error(error);
       }
-    },
-    []
-  );
+    }, []);
 
-  // Configurações
-  const fetchSettings = useCallback(
-    async () => {
+  const fetchSettings =
+    useCallback(async () => {
       try {
         const res = await fetch(
           '/api/settings'
         );
 
-        const data = await res.json();
+        const data =
+          await res.json();
 
         if (data.youtube_id) {
-          setYoutubeId(data.youtube_id);
+          setYoutubeId(
+            data.youtube_id
+          );
         }
 
         if (data.standby_mode) {
-          setStandbyMode(data.standby_mode);
+          setStandbyMode(
+            data.standby_mode
+          );
         }
 
         if (data.standby_time) {
           setStandbyTime(
-            Number(data.standby_time)
+            Number(
+              data.standby_time
+            )
           );
         }
       } catch (error) {
-        console.error(
-          'Error fetching settings:',
-          error
-        );
+        console.error(error);
       }
-    },
-    []
-  );
+    }, []);
 
-  // Mídias
-  const fetchMedia = useCallback(
-    async () => {
+  const fetchMedia =
+    useCallback(async () => {
       try {
-        const res = await fetch('/api/media');
+        const res = await fetch(
+          '/api/media'
+        );
 
-        const data = await res.json();
+        const data =
+          await res.json();
 
         setMediaList(data || []);
       } catch (error) {
-        console.error(
-          'Error fetching media:',
-          error
-        );
+        console.error(error);
       }
-    },
-    []
-  );
+    }, []);
 
   useEffect(() => {
     fetchSettings();
@@ -134,26 +160,35 @@ export default function TVDisplay() {
     fetchAvailability
   ]);
 
-  // Próxima mídia
-  const nextMedia = useCallback(() => {
-    if (mediaList.length === 0) return;
+  // =========================================
+  // MÍDIA
+  // =========================================
 
-    setCurrentMediaIndex(
-      (prev) =>
-        (prev + 1) % mediaList.length
-    );
-  }, [mediaList.length]);
+  const nextMedia =
+    useCallback(() => {
+      if (mediaList.length === 0)
+        return;
+
+      setCurrentMediaIndex(
+        (prev) =>
+          (prev + 1) %
+          mediaList.length
+      );
+    }, [mediaList.length]);
 
   useEffect(() => {
     if (
-      currentMediaIndex >= mediaList.length &&
+      currentMediaIndex >=
+        mediaList.length &&
       mediaList.length > 0
     ) {
       setCurrentMediaIndex(0);
     }
-  }, [mediaList, currentMediaIndex]);
+  }, [
+    mediaList,
+    currentMediaIndex
+  ]);
 
-  // Rotação imagens
   useEffect(() => {
     if (
       isWaitingMode &&
@@ -161,22 +196,27 @@ export default function TVDisplay() {
       mediaList.length > 0
     ) {
       const currentMedia =
-        mediaList[currentMediaIndex];
+        mediaList[
+          currentMediaIndex
+        ];
 
       if (
         currentMedia?.type?.startsWith(
           'image'
         )
       ) {
-        mediaTimerRef.current = setTimeout(
-          nextMedia,
-          10000
-        );
+        mediaTimerRef.current =
+          setTimeout(
+            nextMedia,
+            10000
+          );
       }
     }
 
     return () => {
-      if (mediaTimerRef.current) {
+      if (
+        mediaTimerRef.current
+      ) {
         clearTimeout(
           mediaTimerRef.current
         );
@@ -190,29 +230,38 @@ export default function TVDisplay() {
     nextMedia
   ]);
 
-  // Timer modo espera
+  // =========================================
+  // TIMER
+  // =========================================
+
   const startInactivityTimer =
     useCallback(() => {
       if (timerRef.current) {
-        clearTimeout(timerRef.current);
+        clearTimeout(
+          timerRef.current
+        );
       }
 
-      timerRef.current = setTimeout(
-        () => {
+      timerRef.current =
+        setTimeout(() => {
           setIsWaitingMode(true);
-        },
-        standbyTimeRef.current * 1000
-      );
+        }, standbyTimeRef.current * 1000);
     }, []);
 
-  // Vozes
-  const loadVoices = useCallback(() => {
-    voicesRef.current =
-      window.speechSynthesis.getVoices();
-  }, []);
+  // =========================================
+  // VOZES
+  // =========================================
+
+  const loadVoices =
+    useCallback(() => {
+      voicesRef.current =
+        window.speechSynthesis.getVoices();
+    }, []);
 
   useEffect(() => {
-    if (window.speechSynthesis) {
+    if (
+      window.speechSynthesis
+    ) {
       loadVoices();
 
       window.speechSynthesis.onvoiceschanged =
@@ -220,10 +269,18 @@ export default function TVDisplay() {
     }
   }, [loadVoices]);
 
-  // Falar
+  // =========================================
+  // SPEAK
+  // =========================================
+
   const speak = useCallback(
-    (number: string, counter: string) => {
-      if (!window.speechSynthesis)
+    (
+      number: string,
+      counter: string
+    ) => {
+      if (
+        !window.speechSynthesis
+      )
         return;
 
       window.speechSynthesis.cancel();
@@ -231,9 +288,10 @@ export default function TVDisplay() {
       const isOnlyDigits =
         /^\d+$/.test(number);
 
-      const intro = isOnlyDigits
-        ? `Senha número ${number}`
-        : `${number}`;
+      const intro =
+        isOnlyDigits
+          ? `Senha número ${number}`
+          : `${number}`;
 
       const text = `${intro}, dirigir-se à sala ${counter}`;
 
@@ -242,35 +300,43 @@ export default function TVDisplay() {
           text
         );
 
-      utterance.lang = 'pt-BR';
+      utterance.lang =
+        'pt-BR';
+
       utterance.rate = 1;
+
       utterance.pitch = 1;
 
       const ptVoice =
         voicesRef.current.find(
           (v) =>
-            v.lang.includes('PT') ||
-            v.lang.includes('pt-BR')
+            v.lang.includes(
+              'pt'
+            )
         );
 
       if (ptVoice) {
-        utterance.voice = ptVoice;
+        utterance.voice =
+          ptVoice;
       }
 
-      utterance.onstart = () =>
-        setIsSpeaking(true);
+      utterance.onstart =
+        () =>
+          setIsSpeaking(
+            true
+          );
 
-      utterance.onend = () =>
-        setIsSpeaking(false);
+      utterance.onend =
+        () =>
+          setIsSpeaking(
+            false
+          );
 
-      utterance.onerror = (e) => {
-        console.error(
-          'Speech error:',
-          e
-        );
-
-        setIsSpeaking(false);
-      };
+      utterance.onerror =
+        () =>
+          setIsSpeaking(
+            false
+          );
 
       window.speechSynthesis.speak(
         utterance
@@ -279,7 +345,10 @@ export default function TVDisplay() {
     []
   );
 
+  // =========================================
   // SOCKETS
+  // =========================================
+
   useEffect(() => {
     const handleNewCall = (
       data: any
@@ -289,16 +358,19 @@ export default function TVDisplay() {
       setCurrentCall(data);
 
       setHistory((prev) => {
-        const exists = prev.find(
-          (h) => h.id === data.id
-        );
+        const exists =
+          prev.find(
+            (h) =>
+              h.id === data.id
+          );
 
-        if (exists) return prev;
+        if (exists)
+          return prev;
 
-        return [data, ...prev].slice(
-          0,
-          10
-        );
+        return [
+          data,
+          ...prev
+        ].slice(0, 10);
       });
 
       speak(
@@ -324,12 +396,6 @@ export default function TVDisplay() {
       startInactivityTimer();
     };
 
-    const handleSettingsUpdated =
-      () => {
-        fetchSettings();
-        fetchMedia();
-      };
-
     socket.on(
       'new-call',
       handleNewCall
@@ -341,14 +407,15 @@ export default function TVDisplay() {
     );
 
     socket.on(
-      'settings-updated',
-      handleSettingsUpdated
+      'availability-updated',
+      fetchAvailability
     );
 
     socket.on(
-      'availability-updated',
+      'settings-updated',
       () => {
-        fetchAvailability();
+        fetchSettings();
+        fetchMedia();
       }
     );
 
@@ -356,38 +423,42 @@ export default function TVDisplay() {
       'history-cleared',
       () => {
         setHistory([]);
-        setCurrentCall(null);
-        setIsWaitingMode(true);
+        setCurrentCall(
+          null
+        );
 
-        if (timerRef.current) {
-          clearTimeout(
-            timerRef.current
-          );
-        }
+        setIsWaitingMode(
+          true
+        );
       }
     );
 
-    // Histórico inicial
     fetch('/api/history')
-      .then((res) => res.json())
+      .then((res) =>
+        res.json()
+      )
       .then((data) => {
         if (
           data &&
           data.length > 0
         ) {
-          setCurrentCall(data[0]);
-
-          setHistory(
-            data.slice(1, 10)
+          setCurrentCall(
+            data[0]
           );
 
-          startInactivityTimer();
-        } else {
-          setIsWaitingMode(true);
+          setHistory(
+            data.slice(
+              1,
+              10
+            )
+          );
         }
-      })
-      .catch(() => {
-        setIsWaitingMode(true);
+
+        setTimeout(() => {
+          setIsWaitingMode(
+            true
+          );
+        }, 2000);
       });
 
     return () => {
@@ -402,43 +473,42 @@ export default function TVDisplay() {
       );
 
       socket.off(
-        'settings-updated',
-        handleSettingsUpdated
-      );
-
-      socket.off(
-        'availability-updated'
-      );
-
-      socket.off(
-        'history-cleared'
+        'availability-updated',
+        fetchAvailability
       );
     };
   }, [
     speak,
-    startInactivityTimer,
     fetchSettings,
     fetchMedia,
-    fetchAvailability
+    fetchAvailability,
+    startInactivityTimer
   ]);
 
-  // Ativar áudio
-  const handleUnlockAudio = () => {
-    setAudioUnlocked(true);
+  // =========================================
+  // AUDIO
+  // =========================================
 
-    const unlock =
-      new SpeechSynthesisUtterance(
-        'Áudio ativado'
+  const handleUnlockAudio =
+    () => {
+      setAudioUnlocked(true);
+
+      const unlock =
+        new SpeechSynthesisUtterance(
+          'Áudio ativado'
+        );
+
+      unlock.volume = 0;
+
+      window.speechSynthesis.speak(
+        unlock
       );
+    };
 
-    unlock.volume = 0;
+  // =========================================
+  // LOCK SCREEN
+  // =========================================
 
-    window.speechSynthesis.speak(
-      unlock
-    );
-  };
-
-  // Tela desbloqueio
   if (!audioUnlocked) {
     return (
       <div className="fixed inset-0 bg-slate-900 flex items-center justify-center text-white z-[9999]">
@@ -451,53 +521,46 @@ export default function TVDisplay() {
             opacity: 1,
             scale: 1
           }}
-          className="text-center p-12 bg-slate-800 rounded-[3rem] border-4 border-indigo-500 shadow-2xl max-w-lg"
+          className="text-center p-12 bg-slate-800 rounded-[3rem]"
         >
           <div className="mb-6 flex justify-center text-indigo-400">
             <ShieldAlert size={80} />
           </div>
 
           <h1 className="text-3xl font-black mb-4 uppercase">
-            Ativar Áudio do Painel?
+            Ativar Áudio?
           </h1>
-
-          <p className="text-slate-400 mb-8 font-medium">
-            O navegador exige uma
-            interação para permitir
-            chamadas de voz.
-          </p>
 
           <button
             onClick={
               handleUnlockAudio
             }
-            className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-black py-6 rounded-2xl text-xl shadow-xl transition-all active:scale-95"
+            className="bg-indigo-600 hover:bg-indigo-500 text-white font-black py-6 px-10 rounded-2xl"
           >
-            ATIVAR AGORA
+            ATIVAR
           </button>
         </motion.div>
       </div>
     );
   }
 
+  // =========================================
+  // UI
+  // =========================================
+
   return (
-    <div className="fixed inset-0 bg-slate-100 text-slate-900 overflow-hidden font-sans select-none flex flex-col p-6 gap-6">
+    <div className="fixed inset-0 bg-slate-100 text-slate-900 overflow-hidden flex flex-col p-6 gap-6">
       {/* HEADER */}
-      <div className="bg-indigo-700 text-white p-6 rounded-3xl shadow-lg flex items-center justify-between">
+      <div className="bg-indigo-700 text-white p-6 rounded-3xl flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <div className="bg-white p-2 rounded-xl text-indigo-700">
-            <BellRing
-              size={32}
-              strokeWidth={3}
-            />
-          </div>
+          <BellRing size={32} />
 
           <div>
             <h2 className="text-2xl font-black uppercase">
               Painel de Senhas
             </h2>
 
-            <p className="text-xs uppercase font-bold opacity-80 tracking-widest">
+            <p className="text-xs uppercase">
               Atendimento em Tempo
               Real
             </p>
@@ -505,25 +568,119 @@ export default function TVDisplay() {
         </div>
 
         <div className="text-5xl font-black font-mono">
-          {new Date().toLocaleTimeString(
-            [],
-            {
-              hour: '2-digit',
-              minute: '2-digit'
-            }
-          )}
+          {new Date().toLocaleTimeString()}
         </div>
       </div>
 
       {/* CONTEÚDO */}
-      <div className="flex-1 flex gap-6 overflow-hidden">
-        {/* TELA PRINCIPAL */}
-        <div className="flex-[3] bg-white rounded-[3rem] shadow-2xl flex flex-col border-4 border-indigo-200 overflow-hidden">
-          <div className="flex-1 flex flex-col items-center justify-center p-12 bg-gradient-to-br from-white to-indigo-50">
+      <div className="flex-1 flex gap-6 overflow-hidden relative">
+        {/* STANDBY */}
+        <AnimatePresence>
+          {isWaitingMode && (
+            <motion.div
+              initial={{
+                opacity: 0
+              }}
+              animate={{
+                opacity: 1
+              }}
+              exit={{
+                opacity: 0
+              }}
+              className="absolute inset-0 z-50 bg-black rounded-[3rem] overflow-hidden"
+            >
+              {/* YOUTUBE */}
+              {standbyMode ===
+              'youtube' ? (
+                <iframe
+                  key={
+                    youtubeId
+                  }
+                  width="100%"
+                  height="100%"
+                  src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&mute=0&loop=1&playlist=${youtubeId}&controls=0`}
+                  title="Standby"
+                  frameBorder="0"
+                  allow="autoplay"
+                  allowFullScreen
+                />
+              ) : null}
+
+              {/* LOCAL */}
+              {standbyMode ===
+                'local' &&
+              mediaList.length >
+                0 ? (
+                <div className="w-full h-full">
+                  {mediaList[
+                    currentMediaIndex
+                  ]?.type?.startsWith(
+                    'video'
+                  ) ? (
+                    <video
+                      key={
+                        mediaList[
+                          currentMediaIndex
+                        ].id
+                      }
+                      src={
+                        mediaList[
+                          currentMediaIndex
+                        ].url
+                      }
+                      autoPlay
+                      muted
+                      playsInline
+                      loop
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <img
+                      key={
+                        mediaList[
+                          currentMediaIndex
+                        ].id
+                      }
+                      src={
+                        mediaList[
+                          currentMediaIndex
+                        ].url
+                      }
+                      className="w-full h-full object-cover"
+                    />
+                  )}
+                </div>
+              ) : null}
+
+              {/* SEM MÍDIA */}
+              {standbyMode ===
+                'local' &&
+              mediaList.length ===
+                0 ? (
+                <div className="w-full h-full flex flex-col items-center justify-center text-white">
+                  <LayoutGrid
+                    size={80}
+                    className="opacity-20 mb-4"
+                  />
+
+                  <p className="text-sm font-black uppercase">
+                    Nenhuma mídia cadastrada
+                  </p>
+                </div>
+              ) : null}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* PRINCIPAL */}
+        <div className="flex-[3] bg-white rounded-[3rem] shadow-2xl flex flex-col overflow-hidden">
+          <div className="flex-1 flex flex-col items-center justify-center p-12">
             <AnimatePresence mode="wait">
               {currentCall ? (
                 <motion.div
-                  key={currentCall.id}
+                  key={
+                    currentCall.id
+                  }
                   initial={{
                     scale: 0.8,
                     opacity: 0
@@ -536,33 +693,27 @@ export default function TVDisplay() {
                     scale: 1.2,
                     opacity: 0
                   }}
-                  className="text-center w-full"
+                  className="text-center"
                 >
-                  <span className="text-indigo-900/40 text-3xl font-black uppercase tracking-[0.3em] mb-6 block">
-                    Nome / Senha
+                  <span className="text-3xl font-black uppercase">
+                    Senha
                   </span>
 
-                  <div className="text-[12rem] font-black text-orange-500 leading-none">
+                  <div className="text-[12rem] font-black text-orange-500">
                     {
                       currentCall.number
                     }
                   </div>
 
-                  <div className="mt-12">
-                    <span className="text-slate-500 text-3xl font-bold uppercase tracking-[0.3em]">
-                      Dirija-se à
-                    </span>
-
-                    <div className="bg-indigo-950 text-white text-8xl font-black px-20 py-8 rounded-[2rem] mt-6">
-                      SALA{' '}
-                      {
-                        currentCall.counter
-                      }
-                    </div>
+                  <div className="bg-indigo-950 text-white text-7xl font-black px-20 py-8 rounded-[2rem] mt-8">
+                    SALA{' '}
+                    {
+                      currentCall.counter
+                    }
                   </div>
 
                   {isSpeaking && (
-                    <div className="absolute bottom-8 right-8 bg-orange-100 text-orange-600 p-4 rounded-full shadow-lg">
+                    <div className="absolute bottom-8 right-8 bg-orange-100 text-orange-600 p-4 rounded-full">
                       <Volume2
                         size={40}
                         className="animate-pulse"
@@ -571,14 +722,12 @@ export default function TVDisplay() {
                   )}
                 </motion.div>
               ) : (
-                <div className="text-center text-indigo-900/20">
+                <div className="text-center text-slate-300">
                   <Bell
                     size={200}
-                    strokeWidth={1}
-                    className="mb-8"
                   />
 
-                  <h2 className="text-4xl font-black uppercase tracking-widest">
+                  <h2 className="text-4xl font-black uppercase">
                     Painel Operacional
                   </h2>
                 </div>
@@ -588,56 +737,40 @@ export default function TVDisplay() {
         </div>
 
         {/* LATERAL */}
-        <div className="flex-1 flex flex-col gap-6 overflow-hidden">
-          {/* SALAS */}
-          <div className="flex-1 bg-white rounded-[3rem] p-6 flex flex-col shadow-xl border-4 border-indigo-50 overflow-hidden">
-            <h3 className="text-slate-400 font-black uppercase text-[10px] tracking-[0.2em] mb-4">
+        <div className="flex-1 flex flex-col gap-6">
+          {/* MÉDICOS */}
+          <div className="flex-1 bg-white rounded-[3rem] p-6 overflow-y-auto">
+            <h3 className="font-black uppercase mb-4">
               Médicos & Salas
             </h3>
 
-            <div className="flex-1 space-y-3 overflow-y-auto">
+            <div className="space-y-3">
               {availability.map(
                 (item) => (
                   <div
-                    key={item.id}
-                    className={`p-3 rounded-2xl border flex items-center justify-between ${
-                      item.status ===
-                      'available'
-                        ? 'bg-emerald-50 border-emerald-100'
-                        : item.status ===
-                          'busy'
-                        ? 'bg-red-50 border-red-100'
-                        : 'bg-amber-50 border-amber-100'
-                    }`}
+                    key={
+                      item.id
+                    }
+                    className="p-3 rounded-2xl border flex justify-between"
                   >
                     <div>
-                      <p className="font-extrabold text-sm">
-                        {item.room}
+                      <p className="font-bold">
+                        {
+                          item.room
+                        }
                       </p>
 
-                      <p className="text-[10px] text-slate-500">
-                        {item.doctor}
+                      <p className="text-xs text-slate-500">
+                        {
+                          item.doctor
+                        }
                       </p>
                     </div>
 
-                    <span
-                      className={`px-2 py-1 rounded-xl text-[9px] font-black uppercase ${
-                        item.status ===
-                        'available'
-                          ? 'bg-emerald-500 text-white'
-                          : item.status ===
-                            'busy'
-                          ? 'bg-red-500 text-white'
-                          : 'bg-amber-500 text-white'
-                      }`}
-                    >
-                      {item.status ===
-                      'available'
-                        ? 'Livre'
-                        : item.status ===
-                          'busy'
-                        ? 'Atendendo'
-                        : 'Ausente'}
+                    <span className="text-xs font-black">
+                      {
+                        item.status
+                      }
                     </span>
                   </div>
                 )
@@ -646,54 +779,46 @@ export default function TVDisplay() {
           </div>
 
           {/* HISTÓRICO */}
-          <div className="flex-1 bg-slate-50 rounded-[3rem] p-6 flex flex-col shadow-xl border border-slate-200 overflow-hidden">
-            <h3 className="text-slate-400 font-black uppercase text-[10px] tracking-[0.2em] mb-4">
+          <div className="flex-1 bg-white rounded-[3rem] p-6 overflow-y-auto">
+            <h3 className="font-black uppercase mb-4">
               Últimas Chamadas
             </h3>
 
-            <div className="flex-1 space-y-3 overflow-y-auto">
-              <AnimatePresence initial={false}>
-                {history.map(
-                  (call) => (
-                    <motion.div
-                      key={call.id}
-                      initial={{
-                        x: 50,
-                        opacity: 0
-                      }}
-                      animate={{
-                        x: 0,
-                        opacity: 1
-                      }}
-                      className="bg-white p-3 rounded-2xl border shadow-sm flex justify-between items-center"
-                    >
-                      <div>
-                        <span className="text-[8px] font-black text-indigo-900/40 uppercase tracking-widest">
-                          Senha
-                        </span>
+            <div className="space-y-3">
+              {history.map(
+                (call) => (
+                  <div
+                    key={
+                      call.id
+                    }
+                    className="p-3 rounded-2xl border flex justify-between"
+                  >
+                    <div>
+                      <p className="text-xs uppercase">
+                        Senha
+                      </p>
 
-                        <div className="text-2xl font-black text-indigo-900">
-                          {
-                            call.number
-                          }
-                        </div>
-                      </div>
+                      <p className="text-2xl font-black">
+                        {
+                          call.number
+                        }
+                      </p>
+                    </div>
 
-                      <div className="text-right">
-                        <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">
-                          Sala
-                        </span>
+                    <div className="text-right">
+                      <p className="text-xs uppercase">
+                        Sala
+                      </p>
 
-                        <div className="bg-slate-900 text-white px-2 py-1 rounded-lg text-sm font-black">
-                          {
-                            call.counter
-                          }
-                        </div>
-                      </div>
-                    </motion.div>
-                  )
-                )}
-              </AnimatePresence>
+                      <p className="text-lg font-black">
+                        {
+                          call.counter
+                        }
+                      </p>
+                    </div>
+                  </div>
+                )
+              )}
             </div>
           </div>
         </div>
