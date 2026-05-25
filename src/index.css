@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+@layer base {
+  body {
+    @apply bg-slate-100;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+.tv-card-orange {
+  @apply bg-orange-500 text-white rounded-[3rem] shadow-[0_20px_50px_rgba(249,115,22,0.3)] border-b-8 border-orange-700;
+}
+
+.sidebar-label {
+  @apply text-slate-400 font-black uppercase text-[10px] tracking-widest mb-2;
+}
