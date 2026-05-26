@@ -750,56 +750,70 @@ export default function TVDisplay() {
               Médicos & Salas
             </h3>
 
-            <div className="space-y-3">
+            <div className="space-y-4">
               {availability.map((item) => (
                 <div
                   key={item.id}
-                  className={`p-4 rounded-2xl border flex justify-between items-center transition-all duration-300
-                    ${
-                      item.status === 'available'
-                        ? 'bg-emerald-500/10 border-emerald-400'
-                        : item.status === 'busy'
-                        ? 'bg-red-500/10 border-red-400'
-                        : item.status === 'away'
-                        ? 'bg-yellow-500/10 border-yellow-400'
-                        : 'bg-transparent border-slate-200'
-                    }
-                  `}
+                  className="p-5 rounded-[2rem] border border-slate-300 bg-white shadow-sm transition-all duration-300"
                 >
 
-                  {/* INFO */}
-                  <div className="flex flex-col">
-                    <p className="font-extrabold text-slate-800 text-sm">
-                      {item.room}
-                    </p>
+                  {/* TOPO */}
+                  <div className="flex justify-between items-start mb-4">
+                    <div>
+                      <p className="font-extrabold text-slate-900 text-lg">
+                        {item.room}
+                      </p>
 
-                    <p className="text-xs text-slate-500">
-                      {item.doctor}
-                    </p>
+                      <p className="text-sm text-slate-500">
+                        {item.doctor}
+                      </p>
+                    </div>
+
+                    <div className="text-slate-400">
+                      ✎
+                    </div>
                   </div>
 
-                  {/* STATUS */}
-                  <span
-                    className={`text-[10px] font-black uppercase px-3 py-2 rounded-xl tracking-wide
+                  {/* BOTÕES STATUS */}
+                  <div className="grid grid-cols-3 gap-2">
+
+                    {/* LIVRE */}
+                    <div
+                      className={`rounded-xl py-3 text-center text-xs font-black uppercase transition-all duration-300 border
                       ${
                         item.status === 'available'
-                          ? 'bg-emerald-500 text-white'
-                          : item.status === 'busy'
-                          ? 'bg-red-500 text-white'
-                          : item.status === 'away'
-                          ? 'bg-yellow-500 text-white'
-                          : 'bg-transparent border border-slate-300 text-slate-500'
-                      }
-                    `}
-                  >
-                    {item.status === 'available'
-                      ? 'Livre'
-                      : item.status === 'busy'
-                      ? 'Atendendo'
-                      : item.status === 'away'
-                      ? 'Ausente'
-                      : 'Indefinido'}
-                  </span>
+                          ? 'bg-emerald-500 border-emerald-500 text-white shadow-lg'
+                          : 'bg-white border-slate-300 text-slate-500'
+                      }`}
+                    >
+                      Livre
+                    </div>
+
+                    {/* OCUPADO */}
+                    <div
+                      className={`rounded-xl py-3 text-center text-xs font-black uppercase transition-all duration-300 border
+                      ${
+                        item.status === 'busy'
+                          ? 'bg-red-500 border-red-500 text-white shadow-lg'
+                          : 'bg-white border-slate-300 text-slate-500'
+                      }`}
+                    >
+                      Ocupado
+                    </div>
+
+                    {/* AUSENTE */}
+                    <div
+                      className={`rounded-xl py-3 text-center text-xs font-black uppercase transition-all duration-300 border
+                      ${
+                        item.status === 'away'
+                          ? 'bg-yellow-500 border-yellow-500 text-white shadow-lg'
+                          : 'bg-white border-slate-300 text-slate-500'
+                      }`}
+                    >
+                      Ausente
+                    </div>
+
+                  </div>
                 </div>
               ))}
             </div>
@@ -807,6 +821,7 @@ export default function TVDisplay() {
 
           {/* HISTÓRICO */}
           <div className="flex-1 bg-white rounded-[3rem] p-6 overflow-y-auto">
+
             <h3 className="font-black uppercase mb-4">
               Últimas Chamadas
             </h3>
@@ -847,8 +862,8 @@ export default function TVDisplay() {
                 )
               )}
             </div>
-          </div>
 
+          </div>
         </div>
       </div>
     </div>
