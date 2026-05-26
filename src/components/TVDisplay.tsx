@@ -33,6 +33,13 @@ export default function TVDisplay() {
   const [audioUnlocked, setAudioUnlocked] =
     useState(false);
 
+  // ALERTA SOMENTE NO PAINEL GERAL
+  const previousAvailabilityRef =
+    useRef<any[]>([]);
+
+  const freeRoomAudioRef =
+    useRef<HTMLAudioElement | null>(null);
+
   // STANDBY
   const [standbyMode, setStandbyMode] =
     useState<
@@ -79,6 +86,67 @@ export default function TVDisplay() {
     standbyTimeRef.current =
       standbyTime;
   }, [standbyTime]);
+
+  // =========================================
+  // SOM BIP
+  // =========================================
+
+  useEffect(() => {
+    freeRoomAudioRef.current =
+      new Audio(
+        'https://actions.google.com/sounds/v1/alarms/beep_short.ogg'
+      );
+
+    freeRoomAudioRef.current.volume =
+      1;
+  }, []);
+
+  // =========================================
+  // ALERTA SOMENTE COM BIP
+  // NÃO MOSTRA POPUP
+  // NÃO FALA ÁUDIO
+  // NÃO INTERFERE NO STANDBY
+  // =========================================
+
+  useEffect(() => {
+    if (
+      previousAvailabilityRef.current.length ===
+      0
+    ) {
+      previousAvailabilityRef.current =
+        availability;
+
+      return;
+    }
+
+    availability.forEach((room) => {
+      const oldRoom =
+        previousAvailabilityRef.current.find(
+          (r) => r.id === room.id
+        );
+
+      if (
+        oldRoom &&
+        oldRoom.status !==
+          'available' &&
+        room.status ===
+          'available'
+      ) {
+        // SOMENTE BIP
+        if (
+          freeRoomAudioRef.current
+        ) {
+          freeRoomAudioRef.current.currentTime =
+            0;
+
+          freeRoomAudioRef.current.play();
+        }
+      }
+    });
+
+    previousAvailabilityRef.current =
+      availability;
+  }, [availability]);
 
   // =========================================
   // API
@@ -782,7 +850,7 @@ export default function TVDisplay() {
                       className={`rounded-xl py-3 text-center text-xs font-black uppercase transition-all duration-300 border
                       ${
                         item.status === 'available'
-                          ? 'bg-emerald-500 border-emerald-500 text-white shadow-lg'
+                          ? 'bg-emerald-500 border-emerald-500 text-white shadow-lg animate-pulse'
                           : 'bg-white border-slate-300 text-slate-500'
                       }`}
                     >

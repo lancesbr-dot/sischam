@@ -542,8 +542,10 @@ export default function ControlPanel() {
                       </button>
                     </div>
 
+                    {/* STATUS LIMPO E SOMENTE O ATIVO COLORIDO */}
                     <div className="grid grid-cols-3 gap-2">
 
+                      {/* LIVRE */}
                       <button
                         onClick={() =>
                           handleUpdateStatus(
@@ -551,15 +553,16 @@ export default function ControlPanel() {
                             'available'
                           )
                         }
-                        className={`rounded-xl py-2 text-xs text-white ${
+                        className={`rounded-xl py-2 text-xs font-black border transition-all duration-300 ${
                           item.status === 'available'
-                            ? 'bg-emerald-600'
-                            : 'bg-emerald-400'
+                            ? 'bg-emerald-600 border-emerald-600 text-white shadow-lg'
+                            : 'bg-white border-slate-300 text-slate-500 hover:border-emerald-400'
                         }`}
                       >
                         LIVRE
                       </button>
 
+                      {/* OCUPADO */}
                       <button
                         onClick={() =>
                           handleUpdateStatus(
@@ -567,15 +570,16 @@ export default function ControlPanel() {
                             'busy'
                           )
                         }
-                        className={`rounded-xl py-2 text-xs text-white ${
+                        className={`rounded-xl py-2 text-xs font-black border transition-all duration-300 ${
                           item.status === 'busy'
-                            ? 'bg-red-600'
-                            : 'bg-red-400'
+                            ? 'bg-red-600 border-red-600 text-white shadow-lg'
+                            : 'bg-white border-slate-300 text-slate-500 hover:border-red-400'
                         }`}
                       >
                         OCUPADO
                       </button>
 
+                      {/* AUSENTE */}
                       <button
                         onClick={() =>
                           handleUpdateStatus(
@@ -583,10 +587,10 @@ export default function ControlPanel() {
                             'away'
                           )
                         }
-                        className={`rounded-xl py-2 text-xs text-white ${
+                        className={`rounded-xl py-2 text-xs font-black border transition-all duration-300 ${
                           item.status === 'away'
-                            ? 'bg-amber-600'
-                            : 'bg-amber-400'
+                            ? 'bg-amber-500 border-amber-500 text-white shadow-lg'
+                            : 'bg-white border-slate-300 text-slate-500 hover:border-amber-400'
                         }`}
                       >
                         AUSENTE

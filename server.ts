@@ -235,6 +235,30 @@ async function startServer() {
         WHERE id = ?
       `).run(status, id);
 
+      // =========================
+      // PEGA DADOS DA SALA
+      // =========================
+
+      const roomData = db
+        .prepare(`
+          SELECT * FROM rooms_doctors
+          WHERE id = ?
+        `)
+        .get(id);
+
+      // =========================
+      // EMITE ALERTA SONORO
+      // SOMENTE QUANDO FICAR LIVRE
+      // =========================
+
+      if (status === "available" && roomData) {
+        io.emit("room-available-alert", {
+          room: (roomData as any).room,
+          doctor: (roomData as any).doctor,
+          status: "available",
+        });
+      }
+
       io.emit("availability-updated");
 
       res.json({
@@ -649,6 +673,29 @@ async function startServer() {
           SET status = ?
           WHERE id = ?
         `).run(status, id);
+
+        // =========================
+        // PEGA DADOS DA SALA
+        // =========================
+
+        const roomData = db
+          .prepare(`
+            SELECT * FROM rooms_doctors
+            WHERE id = ?
+          `)
+          .get(id);
+
+        // =========================
+        // ALERTA SONORO
+        // =========================
+
+        if (status === "available" && roomData) {
+          io.emit("room-available-alert", {
+            room: (roomData as any).room,
+            doctor: (roomData as any).doctor,
+            status: "available",
+          });
+        }
 
         io.emit("availability-updated");
       } catch (err) {
